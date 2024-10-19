@@ -24,7 +24,7 @@ connectDB();
 const app = express();
 app.use(express.json())
 app.use(cors({
-origin: ["http://localhost:5173"],
+origin: ["https://kwale-hris-app.onrender.com"],
 methods: ["GET", "POST", "PUT"],
 credentials: true
 }))
