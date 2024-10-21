@@ -1,6 +1,7 @@
 const { connectDB } = require("./config/db");
 const cors = require('cors')
 const bcrypt = require('bcryptjs');
+const cookieParser = require('cookie-parser');
 const salt = 10;
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
@@ -23,7 +24,9 @@ connectDB();
 
 const app = express();
 app.use(express.json())
+app.use(cookieParser())
 app.use(cors({
+// origin: ["https://kwale-hris-app.onrender.com", "http://localhost:4000"],
 origin: ["https://kwale-hris-app.onrender.com"],
 methods: ["GET", "POST", "PUT"],
 credentials: true
