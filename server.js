@@ -8,6 +8,7 @@ const multer = require('multer');
 const XLSX = require('xlsx');
 const csvtojson = require('csvtojson');
 const cron = require('node-cron');
+const https = require('https');
 
 const express = require ('express');
 const EmployeeModel = require("./models/employees");
@@ -57,6 +58,8 @@ app.post('/proxy/authenticate', async (req, res) => {
     }
   
     try {
+      const agent = new https.Agent({ rejectUnauthorized: false }); // Temporarily disable SSL validation
+  
       const response = await axios.get(
         'https://197.248.169.230:447/api/Auth/SystemAuthenticateEnforce',
         {
@@ -65,6 +68,7 @@ app.post('/proxy/authenticate', async (req, res) => {
             'Content-Type': 'application/json',
             Accept: 'application/json',
           },
+          httpsAgent: agent, // Add custom HTTPS agent
         }
       );
   
@@ -72,8 +76,8 @@ app.post('/proxy/authenticate', async (req, res) => {
       res.status(response.status).json(response.data);
     } catch (error) {
       console.error('Error calling the external API:', error.message);
+      console.error('Full error details:', error); // Log the full error for debugging
   
-      // Send error response to the client
       if (error.response) {
         res.status(error.response.status).json({
           error: error.response.data || 'Error from external API',
