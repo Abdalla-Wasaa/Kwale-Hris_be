@@ -47,6 +47,42 @@ limits: { fileSize: 5 * 1024 * 1024 }
 },
 );
 
+//KwaleAppEnforcement Proxy Endpoint
+
+app.post('/proxy/authenticate', async (req, res) => {
+    const { username, password } = req.body;
+  
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Username and Password are required.' });
+    }
+  
+    try {
+      const response = await axios.get(
+        'https://197.248.169.230:447/api/Auth/SystemAuthenticateEnforce',
+        {
+          params: { username, password },
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        }
+      );
+  
+      // Forward the response back to the client
+      res.status(response.status).json(response.data);
+    } catch (error) {
+      console.error('Error calling the external API:', error.message);
+  
+      // Send error response to the client
+      if (error.response) {
+        res.status(error.response.status).json({
+          error: error.response.data || 'Error from external API',
+        });
+      } else {
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+    }
+  });
 
 //Artisan Section
 const calculateRetirementDate = (dob, specialNeeds) => {
