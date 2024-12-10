@@ -49,6 +49,7 @@ limits: { fileSize: 5 * 1024 * 1024 }
 );
 
 //KwaleAppEnforcement Proxy Endpoint
+// Start Login
 
 app.post('/proxy/authenticate', async (req, res) => {
     const { username, password } = req.body;
@@ -58,7 +59,7 @@ app.post('/proxy/authenticate', async (req, res) => {
     }
   
     try {
-      const agent = new https.Agent({ rejectUnauthorized: false }); // Temporarily disable SSL validation
+      const agent = new https.Agent({ rejectUnauthorized: false }); 
   
       const response = await axios.get(
         'https://197.248.169.230:447/api/Auth/SystemAuthenticateEnforce',
@@ -68,15 +69,13 @@ app.post('/proxy/authenticate', async (req, res) => {
             'Content-Type': 'application/json',
             Accept: 'application/json',
           },
-          httpsAgent: agent, // Add custom HTTPS agent
+          httpsAgent: agent, 
         }
       );
-  
-      // Forward the response back to the client
       res.status(response.status).json(response.data);
     } catch (error) {
       console.error('Error calling the external API:', error.message);
-      console.error('Full error details:', error); // Log the full error for debugging
+      console.error('Full error details:', error);
   
       if (error.response) {
         res.status(error.response.status).json({
@@ -87,6 +86,39 @@ app.post('/proxy/authenticate', async (req, res) => {
       }
     }
   });
+  // End login
+
+// Start fetching ParkingUnits
+app.get('/api/proxy/parking-units', async (req, res) => {
+    try {
+      const response = await axios.post('http://197.248.169.226:8085/api/ParkingUnit');
+      res.status(200).json(response.data);
+    } catch (err) {
+      res.status(500).json({ error: 'Error fetching parking units' });
+    }
+  });
+  // End Fetch
+  
+  // Start fetching Vehicletypes
+  app.get('/api/proxy/vehicle-types', async (req, res) => {
+    const parkingUnitId = req.query.Id;
+  
+    if (!parkingUnitId) {
+      return res.status(400).json({ error: 'Parking unit Id is required' });
+    }
+  
+    try {
+      const response = await axios.post('http://197.248.169.226:8085/api/VehicleTypes', {
+        Id: parkingUnitId
+      });
+      
+      res.status(200).json(response.data);
+    } catch (err) {
+      res.status(500).json({ error: 'Error fetching vehicle types' });
+    }
+  });
+  // End Fetch
+  
 
 //Artisan Section
 const calculateRetirementDate = (dob, specialNeeds) => {
