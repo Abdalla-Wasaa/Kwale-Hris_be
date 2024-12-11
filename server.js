@@ -110,17 +110,25 @@ app.get('/api/proxy/parking-units', async (req, res) => {
   
     try {
       console.log('Sending request to external API with Id:', parkingUnitId);
+  
+      // Send the Id as a query parameter
       const response = await axios.post(
-        'http://197.248.169.226:8085/api/VehicleTypes',
-        { Id: parkingUnitId } // Send `Id` in the body
+        `http://197.248.169.226:8085/api/VehicleTypes?Id=${parkingUnitId}`
       );
+  
       console.log('External API response:', response.data); // Log the response
-      res.status(200).json(response.data);
+      res.status(200).json(response.data); // Forward the response to the frontend
     } catch (err) {
-      console.error('Error fetching vehicle types from external API:', err.message);
+      console.error('Error fetching vehicle types from external API:', {
+        message: err.message,
+        status: err.response?.status,
+        data: err.response?.data,
+      });
+  
       res.status(500).json({ error: 'Error fetching vehicle types' });
     }
   });
+  
   
   // End Fetch
   
