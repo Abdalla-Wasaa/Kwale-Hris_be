@@ -131,6 +131,39 @@ app.get('/api/proxy/parking-units', async (req, res) => {
   
   
   // End Fetch
+
+  // handleSearch EnforcementApp
+  app.post('/proxy/KCGUSSDValidator', async (req, res) => {
+    try {
+      // Log the request body
+      console.log('Proxy received request body:', req.body);
+  
+      // Forward the request to the external API
+      const response = await axios.post(
+        'http://197.248.169.226:8085/api/KCGUSSDValidator',
+        req.body,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+  
+      // Log the response from the external API
+      console.log('External API Response:', response.data);
+  
+      // Send the response back to the front end
+      res.status(response.status).json(response.data);
+    } catch (error) {
+      // Log the error details
+      console.error('Error communicating with external API:', error.message);
+      if (error.response) {
+        console.error('Error response data:', error.response.data);
+      }
+  
+      // Send an error response to the front end
+      res.status(error.response?.status || 500).json({
+        message: 'Error occurred while connecting to external API',
+        error: error.response?.data || error.message,
+      });
+    }
+  });
   
 
 //Artisan Section
