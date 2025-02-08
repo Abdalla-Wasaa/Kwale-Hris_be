@@ -850,6 +850,13 @@ app.post('/getBusiness',(req,res)=>{
     .catch(err => res.json(err))
     });
 
+app.post('/getPermit',(req,res)=>{
+    const businessName = req.body.businessName
+    businessPermitModel.find({BusinessName:businessName})
+    .then(permit=> res.json(permit))
+    .catch(err => res.json(err))
+    });
+
 app.listen(4000,()=>{
 console.log("Server listening on port 4000")
 })
