@@ -21,6 +21,7 @@ const educationBackgroundModel = require("./models/educationBackground");
 const RelationshipDetailModel = require("./models/relationshipDetails");
 const UserModel = require("./models/user");
 const RetirementListModel = require("./models/RetirementList");
+const businessModel = require("./models/business");
 connectDB();
 
 const app = express();
@@ -48,7 +49,7 @@ limits: { fileSize: 5 * 1024 * 1024 }
 },
 );
 
-//KwaleAppEnforcement Proxy Endpoint
+//KwaleAppEnforcement Proxy Endpoints
 // Start Login
 
 app.post('/proxy/authenticate', async (req, res) => {
@@ -826,6 +827,14 @@ try {
     res.status(500).json({ error: 'Internal server error' });
 }
 });
+
+
+//Kwale Revenue APIs
+app.post("/createBusiness", (req, res) => {
+    businessModel.create(req.body)
+        .then(businesses => res.json(businesses))
+        .catch(err => res.json(err))
+    });
 
 app.listen(4000,()=>{
 console.log("Server listening on port 4000")
