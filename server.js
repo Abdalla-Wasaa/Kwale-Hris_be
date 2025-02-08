@@ -22,6 +22,7 @@ const RelationshipDetailModel = require("./models/relationshipDetails");
 const UserModel = require("./models/user");
 const RetirementListModel = require("./models/RetirementList");
 const businessModel = require("./models/business");
+const businessPermitModel = require("./models/businessPermit");
 connectDB();
 
 const app = express();
@@ -835,6 +836,12 @@ app.post("/createBusiness", (req, res) => {
         .then(businesses => res.json(businesses))
         .catch(err => res.json(err))
     });
+
+    app.post("/createBusinessPermit", (req, res) => {
+        businessPermitModel.create(req.body)
+            .then(permits => res.json(permits))
+            .catch(err => res.json(err))
+        });
 
 app.listen(4000,()=>{
 console.log("Server listening on port 4000")
