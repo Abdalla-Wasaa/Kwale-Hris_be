@@ -3,8 +3,6 @@ const businessPermitSchema = new mongoose.Schema({
     BusinessPermitNumber : String,
     BusinessName : String,
     AmountPaid : Number,
-    DateIssued : Date,
-    CreatedBy : String,
     DateCreated : Date,
 
     
