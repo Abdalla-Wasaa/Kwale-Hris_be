@@ -7,7 +7,8 @@ const businessSchema = new mongoose.Schema({
     PermitAmount : Number,
     ActivityDescription : String,
     LocationDescription : String,
-    DateCreated : Date,
+    CreatedBy : String,
+    TerminatedDate : Date,
 
     
     },
