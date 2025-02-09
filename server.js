@@ -926,12 +926,12 @@ const data = {
                     "Password": password,    
                     "Timestamp":timestamp,    
                     "TransactionType": "CustomerPayBillOnline",    
-                    "BillAmount": billAmount,    
+                    "Amount": billAmount,    
                     "PartyA":"254716483231",    
                     "PartyB":shortcode,    
                     "PhoneNumber":`254${phoneNumber}`,    
                     "CallBackURL": "https://mydomain.com/pat", 
-                    "BillNumber": billNumber,   
+                    "AccountReference": billNumber,   
                     "AccountReference":"KWALE COUNTY GOVERNMENT",    
                     "TransactionDesc":"Testing Stk Push"
                 };
