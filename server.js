@@ -893,8 +893,8 @@ const consumer = "AXnhnb9qQ2IXaFb3FzATGWK45LoVWa4nvxNbocDqCXz17368";
 const auth = Buffer.from(`${consumer}:${secret}`).toString("base64");
 const shortcode = 174379;
 const phoneNumber = req.body.phoneNumber.substring(1);
-const billAmount = req.body.billAmount;
-const billNumber = req.body.billNumber;
+const billAmount = "FAVSVPQVTYB";
+const billNumber = "4100";
 const passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
 const url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
 
