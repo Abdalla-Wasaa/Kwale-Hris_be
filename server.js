@@ -857,6 +857,105 @@ app.post('/getPermit',(req,res)=>{
     .catch(err => res.json(err))
     });
 
+
+    /*Daraja Api */
+
+   
+const { auth } = require('express-oauth2-jwt-bearer');
+const { config } = require('dotenv');
+
+const createToken = async () => {
+    const secret = "Rh9pySrCnhXZOsVdfwnecVpG0GYHpbjQGigcrUH4haiH5d5saHhkQRuZc41l1lGM";
+    const consumer = "AXnhnb9qQ2IXaFb3FzATGWK45LoVWa4nvxNbocDqCXz17368";
+    const auth = Buffer.from(`${consumer}:${secret}`).toString("base64");
+
+    try {
+        const response = await axios.get(
+            "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials", {
+                headers: {
+                    Authorization: `Basic ${auth}`,
+                }
+            }
+        );
+        return response.data.access_token;
+    } catch (err) {
+        console.error(err);
+        throw new Error(err.message); // Propagate the error up
+    }
+};
+
+app.post("/stkPush", async (req, res) => {
+try {
+const stkToken = await createToken();
+
+const secret = "Rh9pySrCnhXZOsVdfwnecVpG0GYHpbjQGigcrUH4haiH5d5saHhkQRuZc41l1lGM";
+const consumer = "AXnhnb9qQ2IXaFb3FzATGWK45LoVWa4nvxNbocDqCXz17368";
+const auth = Buffer.from(`${consumer}:${secret}`).toString("base64");
+const shortcode = 174379;
+const phoneNumber = req.body.phoneNumber.substring(1);
+const billAmount = req.body.billAmount;
+const billNumber = req.body.billNumber;
+const passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
+const url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
+
+const date = new Date();
+const timestamp = date.getFullYear() +
+    ("0" + (date.getMonth() + 1)).slice(-2) +
+    ("0" + date.getDate()).slice(-2) +
+    ("0" + date.getHours()).slice(-2) +
+    ("0" + date.getMinutes()).slice(-2) +
+    ("0" + date.getSeconds()).slice(-2);
+
+const password = Buffer.from(shortcode + passkey + timestamp).toString("base64");
+const data = {    
+                    // "BusinessShortCode": shortcode,    
+                    // "Password": password,    
+                    // "Timestamp": timestamp,    
+                    // "TransactionType": "CustomerPayBillOnline",    
+                    // "Amount": amount,    
+                    // "PartyA": `254${phone}`,    
+                    // "PartyB": shortcode,    
+                    // "PhoneNumber": `254${phone}`, 
+                    // "ProjectName": projectName,   
+                    // "CallBackURL": "https://mydomain.com/pat",    
+                    // "AccountReference": "Generous reach Donations",    
+                    // "TransactionDesc": "Testing Stk Push"
+                    
+                                        
+                    "BusinessShortCode": shortcode,    
+                    "Password": password,    
+                    "Timestamp":timestamp,    
+                    "TransactionType": "CustomerPayBillOnline",    
+                    "BillAmount": billAmount,    
+                    "PartyA":"254716483231",    
+                    "PartyB":shortcode,    
+                    "PhoneNumber":`254${phoneNumber}`,    
+                    "CallBackURL": "https://mydomain.com/pat", 
+                    "BillNumber": billNumber,   
+                    "AccountReference":"KWALE COUNTY GOVERNMENT",    
+                    "TransactionDesc":"Testing Stk Push"
+                };
+            
+        
+
+await axios.post(url, data, {
+    headers: {
+        Authorization: `Bearer ${stkToken}`,
+    }
+}).then((response) => {
+    console.log(response.data);
+    res.status(200).json(response.data);
+}).catch((err) => {
+    console.error("stkPush error:", err);
+    res.status(400).json(err.message);
+});
+} catch (error) {
+console.error("Token retrieval error:", error);
+res.status(400).json(error.message);
+}
+});
+
+
 app.listen(4000,()=>{
 console.log("Server listening on port 4000")
 })
