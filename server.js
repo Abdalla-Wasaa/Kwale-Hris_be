@@ -861,8 +861,8 @@ app.post('/getPermit',(req,res)=>{
     /*Daraja Api */
 
    
-const { auth } = require('express-oauth2-jwt-bearer');
-const { config } = require('dotenv');
+// const { auth } = require('express-oauth2-jwt-bearer');
+// const { config } = require('dotenv');
 
 const createToken = async () => {
     const secret = "Rh9pySrCnhXZOsVdfwnecVpG0GYHpbjQGigcrUH4haiH5d5saHhkQRuZc41l1lGM";
