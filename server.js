@@ -23,6 +23,9 @@ const UserModel = require("./models/user");
 const RetirementListModel = require("./models/RetirementList");
 const businessModel = require("./models/business");
 const businessPermitModel = require("./models/businessPermit");
+const vehicleModel = require("./models/vehicle");
+const propertyModel = require("./models/property");
+const plotModel = require("./models/plot");
 connectDB();
 
 const app = express();
@@ -831,6 +834,7 @@ try {
 
 
 //Kwale Revenue APIs
+// 1. Business Permit Module
 app.post("/createBusiness", (req, res) => {
     businessModel.create(req.body)
         .then(businesses => res.json(businesses))
@@ -856,6 +860,65 @@ app.post('/getPermit',(req,res)=>{
     .then(permit=> res.json(permit))
     .catch(err => res.json(err))
     });
+
+// 2. Vehicle Module
+app.post("/createVehicle", (req, res) => {
+    vehicleModel.create(req.body)
+        .then(vehicle => res.json(vehicle))
+        .catch(err => res.json(err))
+    });
+
+app.post('/getVehicle',(req,res)=>{
+    const vehicleNumber = req.body.vehicleNumber
+    vehicleModel.find({VehicleNumber:vehicleNumber})
+    .then(vehicle=> res.json(vehicle))
+    .catch(err => res.json(err))
+    });
+
+
+// 3. Property Module
+app.post("/createProperty", (req, res) => {
+    propertyModel.create(req.body)
+        .then(property => res.json(property))
+        .catch(err => res.json(err))
+    });
+
+app.post('/getPropertyByUPN',(req,res)=>{
+    const upn = req.body.upn
+    propertyModel.find({UPN:upn})
+    .then(property=> res.json(property))
+    .catch(err => res.json(err))
+    });
+
+app.post('/getPropertyByLR',(req,res)=>{
+    const lr = req.body.lr
+    propertyModel.find({LrNumber:lr})
+    .then(property=> res.json(property))
+    .catch(err => res.json(err))
+    });
+
+
+// 2. Plot Module
+app.post("/createPlot", (req, res) => {
+    plotModel.create(req.body)
+        .then(plot => res.json(plot))
+        .catch(err => res.json(err))
+    });
+
+app.post('/getPlotByUPN',(req,res)=>{
+    const upn = req.body.upn
+    plotModel.find({UPN:upn})
+    .then(plot=> res.json(plot))
+    .catch(err => res.json(err))
+    });
+
+app.post('/getPlotByLR',(req,res)=>{
+    const lr = req.body.lr
+    plotModel.find({LrNumber:lr})
+    .then(plot=> res.json(plot))
+    .catch(err => res.json(err))
+    });
+
 
 
     /*Daraja Api */
