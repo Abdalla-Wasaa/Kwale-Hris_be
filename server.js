@@ -883,12 +883,39 @@ app.post("/createProperty", (req, res) => {
         .catch(err => res.json(err))
     });
 
-app.post('/getPropertyByUPN',(req,res)=>{
-    const upn = req.body.upn
-    propertyModel.find({UPN:upn})
-    .then(property=> res.json(property))
-    .catch(err => res.json(err))
-    });
+app.post('/getPropertyPlotsByUPN', async (req, res) => {
+    const upn = req.body.upn;
+
+    try {
+        
+        const [properties, plots] = await Promise.all([
+            propertyModel.find({ UPN: upn }),
+            plotModel.find({ UPN: upn })
+        ]);
+        
+        res.json({ properties, plots });
+    } catch (err) {
+        console.error("Error fetching data:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+app.post('/getPropertyPlotsByLR', async (req, res) => {
+    const lr = req.body.lr;
+
+    try {
+        
+        const [properties, plots] = await Promise.all([
+            propertyModel.find({ LrNumber: lr }),
+            plotModel.find({ LrNumber: lr })
+        ]);
+        
+        res.json({ properties, plots });
+    } catch (err) {
+        console.error("Error fetching data:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
 
 app.post('/getPropertyByLR',(req,res)=>{
     const lr = req.body.lr

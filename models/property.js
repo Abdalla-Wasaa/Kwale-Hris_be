@@ -14,7 +14,6 @@ const PropertySchema = new mongoose.Schema({
     OwnerPin : String,
     DateCreated : Date,
     CreatedBy : String,
-    TerminatedDate : Date,
 
     
     },
