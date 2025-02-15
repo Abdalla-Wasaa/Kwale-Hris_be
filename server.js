@@ -33,7 +33,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
 // origin: ["https://kwale-hris-app.onrender.com", "http://localhost:4000"],
-origin: ["https://kwale-hris-app.onrender.com"],
+origin: ["https://kwale-hris-app.onrender.com","http://localhost:3000"],
 methods: ["GET", "POST", "PUT"],
 credentials: true
 }))
