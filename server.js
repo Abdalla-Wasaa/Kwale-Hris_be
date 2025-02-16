@@ -842,6 +842,12 @@ app.post("/createRevenueSource", (req, res) => {
         .catch(err => res.json(err))
     });
 
+app.get('/getRevenueSource',(req,res)=>{
+    revenuesourceModel.find({})
+    .then(revenueSources=> res.json(revenueSources))
+    .catch(err => res.json(err))
+    });
+
 // 1. Business Permit Module
 app.post("/createBusiness", (req, res) => {
     businessModel.create(req.body)
