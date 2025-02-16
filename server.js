@@ -27,6 +27,7 @@ const vehicleModel = require("./models/vehicle");
 const propertyModel = require("./models/property");
 const plotModel = require("./models/plot");
 const revenuesourceModel = require("./models/revenuesource");
+const houseandstallModel = require("./models/houseandstalls");
 connectDB();
 
 const app = express();
@@ -939,7 +940,7 @@ app.post('/getPropertyByLR',(req,res)=>{
     });
 
 
-// 2. Plot Module
+// 4. Plot Module
 app.post("/createPlot", (req, res) => {
     plotModel.create(req.body)
         .then(plot => res.json(plot))
@@ -957,6 +958,21 @@ app.post('/getPlotByLR',(req,res)=>{
     const lr = req.body.lr
     plotModel.find({LrNumber:lr})
     .then(plot=> res.json(plot))
+    .catch(err => res.json(err))
+    });
+
+// 5. Houses And Stalls
+
+app.post("/createHouseAndStalls", (req, res) => {
+    houseandstallModel.create(req.body)
+        .then(houseORstall => res.json(houseORstall))
+        .catch(err => res.json(err))
+    });
+
+app.post('/getHouseAndStalls',(req,res)=>{
+    const houseOrStallNumber = req.body.houseOrStallNumber
+    vehicleModel.find({HouseOrStallNumber:houseOrStallNumber})
+    .then(houseORstall=> res.json(houseORstall))
     .catch(err => res.json(err))
     });
 
