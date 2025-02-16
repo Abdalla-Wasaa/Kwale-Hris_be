@@ -971,7 +971,7 @@ app.post("/createHouseAndStalls", (req, res) => {
 
 app.post('/getHouseAndStalls',(req,res)=>{
     const houseOrStallNumber = req.body.houseOrStallNumber
-    vehicleModel.find({HouseOrStallNumber:houseOrStallNumber})
+    houseandstallModel.find({HouseOrStallNumber:houseOrStallNumber})
     .then(houseORstall=> res.json(houseORstall))
     .catch(err => res.json(err))
     });
