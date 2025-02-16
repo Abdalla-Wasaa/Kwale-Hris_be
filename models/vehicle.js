@@ -9,7 +9,7 @@ const VehicleSchema = new mongoose.Schema({
     OwnerEmail : String,
     OwnerPin : String,
     CreatedBy : String,
-    TerminatedDate : Date,
+    TerminatedDate : Date
 
     
     },
