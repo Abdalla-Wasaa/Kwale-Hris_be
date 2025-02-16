@@ -22,6 +22,7 @@ const RelationshipDetailModel = require("./models/relationshipDetails");
 const UserModel = require("./models/user");
 const RetirementListModel = require("./models/RetirementList");
 const businessModel = require("./models/business");
+const revenueModel = require("./models/revenueSource");
 const businessPermitModel = require("./models/businessPermit");
 const vehicleModel = require("./models/vehicle");
 const propertyModel = require("./models/property");
@@ -834,6 +835,13 @@ try {
 
 
 //Kwale Revenue APIs
+//0. Revenue sources
+app.post("/createRevenueSource", (req, res) => {
+    revenueModel.create(req.body)
+        .then(revenue => res.json(revenue))
+        .catch(err => res.json(err))
+    });
+
 // 1. Business Permit Module
 app.post("/createBusiness", (req, res) => {
     businessModel.create(req.body)
