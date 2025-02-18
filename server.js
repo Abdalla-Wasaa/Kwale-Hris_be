@@ -28,6 +28,7 @@ const propertyModel = require("./models/property");
 const plotModel = require("./models/plot");
 const revenuesourceModel = require("./models/revenuesource");
 const houseandstallModel = require("./models/houseandstalls");
+const cessModel = require("./models/cess");
 connectDB();
 
 const app = express();
@@ -976,6 +977,21 @@ app.post('/getHouseAndStalls',(req,res)=>{
     .catch(err => res.json(err))
     });
 
+
+// 6. Cess
+
+app.post("/createCesss", (req, res) => {
+    cessModel.create(req.body)
+        .then(cess => res.json(cess))
+        .catch(err => res.json(err))
+    });
+
+app.post('/getCess',(req,res)=>{
+    const TransactionCode = req.body.TransactionCode
+    cessModel.find({TransactionCode:TransactionCode})
+    .then(cess=> res.json(cess))
+    .catch(err => res.json(err))
+    });
 
 
     /*Daraja Api */
