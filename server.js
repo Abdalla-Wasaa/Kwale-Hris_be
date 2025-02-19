@@ -993,10 +993,15 @@ app.post('/getCess',(req,res)=>{
     .catch(err => res.json(err))
     });
 
+app.post('/getCessByClient',(req,res)=>{
+    const CustomerName = req.body.CustomerName
+    cessModel.find({CustomerName:CustomerName})
+    .then(cess=> res.json(cess))
+    .catch(err => res.json(err))
+    });
 
     /*Daraja Api */
-
-   
+  
 // const { auth } = require('express-oauth2-jwt-bearer');
 // const { config } = require('dotenv');
 
