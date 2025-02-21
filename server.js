@@ -1130,6 +1130,74 @@ app.post('/uploadVehicleData', upload.single('file'), async (req, res) => {
     }
 });
 
+app.post('/uploadBusinessData', upload.single('file'), async (req, res) => {
+    try {
+        // Read the Excel file
+        const filePath = req.file.path;
+        const workbook = XLSX.readFile(filePath);
+        const sheetName = workbook.SheetNames[0]; // Assumes data is in the first sheet
+        const worksheet = workbook.Sheets[sheetName];
+        const data = XLSX.utils.sheet_to_json(worksheet,{raw: false});
+
+        // Loop through each employee record in the data
+        for (const business of data) {
+            // Check if the employee already exists in the database
+            const existingBusiness = await businessModel.findOne({ BusinessName: business.BusinessName });
+
+            if (existingBusiness) {
+                // If the employee exists, update the record
+                await businessModel.updateOne(
+                    { BusinessName: business.BusinessName },
+                    { $set: business }
+                );
+            } else {
+                // If the employee does not exist, create a new record
+                await businessModel.create(business);
+            }
+        }
+
+        // Send response
+        res.status(200).json({ message: 'Data successfully uploaded!' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to upload data' });
+    }
+});
+
+app.post('/uploadBusinessPermitData', upload.single('file'), async (req, res) => {
+    try {
+       
+        const filePath = req.file.path;
+        const workbook = XLSX.readFile(filePath);
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const data = XLSX.utils.sheet_to_json(worksheet,{raw: false});
+
+        
+        for (const permit of data) {
+          
+            const existingPermit = await businessPermitModel.findOne({ BusinessName: permit.BusinessName });
+
+            if (existingPermit) {
+            
+                await businessPermitModel.updateOne(
+                    { BusinessName: permit.BusinessName },
+                    { $set: permit }
+                );
+            } else {
+             
+                await businessPermitModel.create(permit);
+            }
+        }
+
+        // Send response
+        res.status(200).json({ message: 'Data successfully uploaded!' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to upload data' });
+    }
+});
+
 
 //ROBERT STK
    /*Daraja Api */
