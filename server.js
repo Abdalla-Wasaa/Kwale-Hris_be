@@ -1103,7 +1103,7 @@ app.post('/uploadVehicleData', upload.single('file'), async (req, res) => {
         const workbook = XLSX.readFile(filePath);
         const sheetName = workbook.SheetNames[0]; // Assumes data is in the first sheet
         const worksheet = workbook.Sheets[sheetName];
-        const data = XLSX.utils.sheet_to_json(worksheet);
+        const data = XLSX.utils.sheet_to_json(worksheet,{raw: false});
 
         // Loop through each employee record in the data
         for (const vehicle of data) {
