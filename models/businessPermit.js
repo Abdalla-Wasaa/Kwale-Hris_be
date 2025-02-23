@@ -4,9 +4,7 @@ const businessPermitSchema = new mongoose.Schema({
     BusinessName : String,
     CalendarYear : String,
     AmountPaid : Number,
-    DateCreated : Date,
-
-    
+    DateCreated : Date,  
     },
     {
         timestamps:true

@@ -1211,9 +1211,6 @@ const consumer = "AXnhnb9qQ2IXaFb3FzATGWK45LoVWa4nvxNbocDqCXz17368";
 const auth = Buffer.from(`${consumer}:${secret}`).toString("base64");
 const shortcode = 174379;
 const phoneNumber = req.body.phoneNumber.substring(1);
-const description = req.body.description;
-const product = req.body.product;
-const quantity = req.body.quantity;
 const amount = req.body.amount;
 const passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
 const url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
@@ -1236,10 +1233,7 @@ const data = {
                     "PartyA":"254716483231",    
                     "PartyB":shortcode,    
                     "PhoneNumber":`254${phoneNumber}`,    
-                    "CallBackURL": "https://mydomain.com/pat", 
-                    "Descrption": description, 
-                    "Quantity" : quantity,
-                    "Product" : product,  
+                    "CallBackURL": "https://mydomain.com/pat",   
                     "AccountReference":"KWALE COUNTY GOVERNMENT",    
                     "TransactionDesc":"Testing Stk Push"
                 };
