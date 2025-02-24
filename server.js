@@ -870,6 +870,21 @@ app.post('/getBusiness',(req,res)=>{
     .catch(err => res.json(err))
     });
 
+app.post('/getBusinessWithOptions', (req, res) => {
+    const businessName = req.body.businessName;
+    businessModel.find({ BusinessName: businessName })
+    .then(business => {
+        if (business.length > 0) {
+            res.json(business);
+        } else {
+            businessModel.find({ BusinessName: { $regex: businessName, $options: 'i' } })
+            .then(suggestions => res.json({ message: 'No exact match found. Here are some suggestions:', suggestions }))
+            .catch(err => res.json(err));
+        }
+    })
+    .catch(err => res.json(err));
+});
+
 app.post('/getPermit',(req,res)=>{
     const businessName = req.body.businessName
     businessPermitModel.find({BusinessName:businessName})
