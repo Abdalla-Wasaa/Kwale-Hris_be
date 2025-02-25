@@ -906,6 +906,21 @@ app.post('/getVehicle',(req,res)=>{
     .catch(err => res.json(err))
     });
 
+app.post('/getVehicleWithOptions', (req, res) => {
+    const vehicleNumber = req.body.vehicleNumber;
+    vehicleModel.find({ VehicleNumber: vehicleNumber })
+    .then(vehicle => {
+        if (business.length > 0) {
+            res.json(vehicle);
+        } else {
+            vehicleModel.find({ VehicleNumber: { $regex: vehicleNumber, $options: 'i' } })
+            .then(suggestions => res.json({ message: 'No exact match found. Here are some suggestions:', suggestions }))
+            .catch(err => res.json(err));
+        }
+    })
+    .catch(err => res.json(err));
+});
+
 
 // 3. Property Module
 app.post("/createProperty", (req, res) => {
