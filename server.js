@@ -910,7 +910,7 @@ app.post('/getVehicleWithOptions', (req, res) => {
     const vehicleNumber = req.body.vehicleNumber;
     vehicleModel.find({ VehicleNumber: vehicleNumber })
     .then(vehicle => {
-        if (business.length > 0) {
+        if (vehicle.length > 0) {
             res.json(vehicle);
         } else {
             vehicleModel.find({ VehicleNumber: { $regex: vehicleNumber, $options: 'i' } })
