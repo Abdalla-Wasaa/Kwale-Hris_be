@@ -1287,6 +1287,43 @@ res.status(400).json(error.message);
 }
 });
 
+app.post('/proxy/stkPush', async (req, res) => {
+    const { Phone, Amount, AccountReference } = req.body;
+
+    if (!Phone || !Amount || !AccountReference) {
+        return res.status(400).json({ error: 'All Fields are required.' });
+    }
+
+    try {
+        const agent = new https.Agent({ rejectUnauthorized: false });
+
+        const response = await axios.post(
+            'http://www.clickfusion.co.ke/kcg/webhook.php',
+            { Phone, Amount, AccountReference },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+                httpsAgent: agent,
+            }
+        );
+
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error calling the external API:', error.message);
+        console.error('Full error details:', error);
+
+        if (error.response) {
+            res.status(error.response.status).json({
+                error: error.response.data || 'Error from external API',
+            });
+        } else {
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+});
+
 
 app.listen(4000,()=>{
 console.log("Server listening on port 4000")
