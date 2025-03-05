@@ -1010,11 +1010,23 @@ app.post('/getHouseAndStalls',(req,res)=>{
 
 // 6. Cess
 
-app.post("/createCesss", (req, res) => {
-    cessModel.create(req.body)
-        .then(cess => res.json(cess))
-        .catch(err => res.json(err))
-    });
+app.post('/createCess', async (req, res) => {
+    try {
+        const { RevenueId, TransactionCode,Amount,Description, PaymodeId,CustomerName, UnitQty,ServedBy} = req.body;
+
+        // Capture the current date and time in EAT (UTC+3)
+        const transactionDate = new Date(); // Automatically takes the current timestamp
+
+        const newTransaction = new cessModel({ RevenueId,TransactionCode, Amount, Description, TransactionDate: transactionDate, PaymodeId,CustomerName,UnitQty, ServedBy});
+
+        await newTransaction.save();
+        res.status(201).json({ message: 'Transaction saved successfully', transaction: newTransaction });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
 
 app.post('/getCess',(req,res)=>{
     const TransactionCode = req.body.TransactionCode
