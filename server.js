@@ -1045,46 +1045,52 @@ app.post('/getCessByClient',(req,res)=>{
 app.post('/getCessWithOptions', async (req, res) => {
     try {
         const { CustomerName } = req.body;
-        
+
         // Get today's date in EAT (UTC+3) and normalize time
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Normalize to start of the day
-        
+
         const startOfDay = new Date(today);
         const endOfDay = new Date(today);
         endOfDay.setHours(23, 59, 59, 999); // End of today
 
-        // Find items with matching CustomerName and today's TransactionDate
+        // Find transactions matching CustomerName and today's date
         const cess = await cessModel.find({
             CustomerName: CustomerName,
-            TransactionDate: {
-                $gte: startOfDay, // Greater than or equal to start of the day
-                $lt: endOfDay    // Less than end of the day
-            }
+            TransactionDate: { $gte: startOfDay, $lt: endOfDay }
         });
 
         if (cess.length > 0) {
-            return res.json(cess);
+            // Convert TransactionDate to EAT before sending the response
+            const formattedCess = cess.map(transaction => ({
+                ...transaction._doc,
+                TransactionDate: new Date(transaction.TransactionDate).toLocaleString("en-KE", { timeZone: "Africa/Nairobi" })
+            }));
+
+            return res.json(formattedCess);
         }
-        
-        // If no exact match, return suggestions based on CustomerName
+
+        // If no exact match, return suggestions
         const suggestions = await cessModel.find({
             CustomerName: { $regex: CustomerName, $options: 'i' },
-            TransactionDate: {
-                $gte: startOfDay,
-                $lt: endOfDay
-            }
+            TransactionDate: { $gte: startOfDay, $lt: endOfDay }
         });
 
         if (suggestions.length > 0) {
-            return res.json({ message: 'No exact match found. Here are some suggestions:', suggestions });
+            const formattedSuggestions = suggestions.map(transaction => ({
+                ...transaction._doc,
+                TransactionDate: new Date(transaction.TransactionDate).toLocaleString("en-KE", { timeZone: "Africa/Nairobi" })
+            }));
+
+            return res.json({ message: 'No exact match found. Here are some suggestions:', suggestions: formattedSuggestions });
         }
-        
+
         res.json({ message: 'No transactions found for today.' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
+    
 
     /*Daraja Api */
   
