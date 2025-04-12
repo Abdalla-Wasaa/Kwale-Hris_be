@@ -3,7 +3,7 @@ const receiptSchema = new mongoose.Schema({
     ID : String,
     BusinessType : String,
     BillNumber : String,
-    Transaction : Date
+    TransactionRef : String
  
     },
     {
