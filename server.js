@@ -29,6 +29,7 @@ const plotModel = require("./models/plot");
 const revenuesourceModel = require("./models/revenuesource");
 const houseandstallModel = require("./models/houseandstalls");
 const cessModel = require("./models/cess");
+const receiptModel = require("./models/receipt");
 connectDB();
 
 const app = express();
@@ -990,6 +991,12 @@ app.post('/getPlotByLR',(req,res)=>{
     plotModel.find({LrNumber:lr})
     .then(plot=> res.json(plot))
     .catch(err => res.json(err))
+    });
+
+app.post("/createReceipt", (req, res) => {
+    receiptModel.create(req.body)
+        .then(receipt => res.json(receipt))
+        .catch(err => res.json(err))
     });
 
 // 5. Houses And Stalls
