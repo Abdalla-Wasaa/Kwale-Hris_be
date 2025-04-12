@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const receiptSchema = new mongoose.Schema({
     ID : String,
     BusinessType : String,
-    BillNumber : Number,
+    BillNumber : String,
     Transaction : Date
  
     },
