@@ -31,6 +31,7 @@ const houseandstallModel = require("./models/houseandstalls");
 const cessModel = require("./models/cess");
 const receiptModel = require("./models/receipt");
 const businessTypeModel = require("./models/businessTypes");
+const idTypeModel = require("./models/idType");
 connectDB();
 
 const app = express();
@@ -866,6 +867,16 @@ app.post("/createBusinessType", (req, res) => {
 app.get('/getBusinessTypes',(req,res)=>{
     businessTypeModel.find({})
     .then(busiTypes=> res.json(busiTypes))
+    .catch(err => res.json(err))
+    });
+app.post("/createIdType", (req, res) => {
+    idTypeModel.create(req.body)
+        .then(idType => res.json(idType))
+        .catch(err => res.json(err))
+    });
+app.get('/getIdTypes',(req,res)=>{
+    idTypeModel.find({})
+    .then(idTypes=> res.json(idTypes))
     .catch(err => res.json(err))
     });
 
