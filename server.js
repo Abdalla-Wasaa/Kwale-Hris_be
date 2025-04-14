@@ -897,8 +897,8 @@ app.post("/createActivityCode", (req, res) => {
         .then(activityCode => res.json(activityCode))
         .catch(err => res.json(err))
     });
-app.get('/getActivityCode',(req,res)=>{
-    activityCodeModel.find({})
+app.get('/getActivityCode/:Code',(req,res)=>{
+    activityCodeModel.find({Code:Code})
     .then(activityCode=> res.json(activityCode))
     .catch(err => res.json(err))
     });
