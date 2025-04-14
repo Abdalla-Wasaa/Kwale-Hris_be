@@ -30,6 +30,7 @@ const revenuesourceModel = require("./models/revenuesource");
 const houseandstallModel = require("./models/houseandstalls");
 const cessModel = require("./models/cess");
 const receiptModel = require("./models/receipt");
+const businessTypeModel = require("./models/businessTypes");
 connectDB();
 
 const app = express();
@@ -856,6 +857,16 @@ app.post("/createBusiness", (req, res) => {
     businessModel.create(req.body)
         .then(businesses => res.json(businesses))
         .catch(err => res.json(err))
+    });
+app.post("/createBusinessType", (req, res) => {
+    businessTypeModel.create(req.body)
+        .then(busiType => res.json(busiType))
+        .catch(err => res.json(err))
+    });
+app.get('/getBusinessTypes',(req,res)=>{
+    businessTypeModel.find({})
+    .then(busiTypes=> res.json(busiTypes))
+    .catch(err => res.json(err))
     });
 
 app.post("/createBusinessPermit", (req, res) => {
