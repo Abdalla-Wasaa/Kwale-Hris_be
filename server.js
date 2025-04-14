@@ -33,6 +33,7 @@ const receiptModel = require("./models/receipt");
 const businessTypeModel = require("./models/businessTypes");
 const idTypeModel = require("./models/idType");
 const businessCategoryModel = require("./models/businessCategory");
+const activityCodeModel = require("./models/activityCodes");
 connectDB();
 
 const app = express();
@@ -889,6 +890,16 @@ app.post("/createBusinessCategory", (req, res) => {
 app.get('/getBusinessCategory',(req,res)=>{
     businessCategoryModel.find({})
     .then(businessCategories=> res.json(businessCategories))
+    .catch(err => res.json(err))
+    });
+app.post("/createActivityCode", (req, res) => {
+    activityCodeModel.create(req.body)
+        .then(activityCode => res.json(activityCode))
+        .catch(err => res.json(err))
+    });
+app.get('/getActivityCode',(req,res)=>{
+    activityCodeModel.find({})
+    .then(activityCode=> res.json(activityCode))
     .catch(err => res.json(err))
     });
 
