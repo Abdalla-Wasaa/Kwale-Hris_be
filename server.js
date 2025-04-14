@@ -898,7 +898,8 @@ app.post("/createActivityCode", (req, res) => {
         .catch(err => res.json(err))
     });
 app.get('/getActivityCode/:Code',(req,res)=>{
-    activityCodeModel.find({Code:Code})
+    const code = req.params.Code;
+    activityCodeModel.find({Code:code})
     .then(activityCode=> res.json(activityCode))
     .catch(err => res.json(err))
     });
