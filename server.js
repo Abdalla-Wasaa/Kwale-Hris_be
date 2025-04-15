@@ -34,6 +34,8 @@ const businessTypeModel = require("./models/businessTypes");
 const idTypeModel = require("./models/idType");
 const businessCategoryModel = require("./models/businessCategory");
 const activityCodeModel = require("./models/activityCodes");
+const subcountyModel = require("./models/subcounty");
+const wardModel = require("./models/ward");
 connectDB();
 
 const app = express();
@@ -881,6 +883,27 @@ app.get('/getIdTypes',(req,res)=>{
     .then(idTypes=> res.json(idTypes))
     .catch(err => res.json(err))
     });
+app.post("/createSubcounty", (req, res) => {
+    subcountyModel.create(req.body)
+        .then(subcounty => res.json(subcounty))
+        .catch(err => res.json(err))
+    });
+app.get('/getSubcounty',(req,res)=>{
+    subcountyModel.find({})
+    .then(subcounties=> res.json(subcounties))
+    .catch(err => res.json(err))
+    });
+    app.post("/createWard", (req, res) => {
+        wardModel.create(req.body)
+            .then(ward => res.json(ward))
+            .catch(err => res.json(err))
+        });
+    app.get('/getWard/:Name',(req,res)=>{
+        const name = req.params.Name;
+        wardModel.find({Name:name})
+        .then(ward=> res.json(ward))
+        .catch(err => res.json(err))
+        });
 
 app.post("/createBusinessCategory", (req, res) => {
     businessCategoryModel.create(req.body)
