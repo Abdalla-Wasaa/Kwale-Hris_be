@@ -36,6 +36,7 @@ const businessCategoryModel = require("./models/businessCategory");
 const activityCodeModel = require("./models/activityCodes");
 const subcountyModel = require("./models/subcounty");
 const wardModel = require("./models/ward");
+const ClampingFeeModel = require("./models/clampingFee");
 connectDB();
 
 const app = express();
@@ -991,6 +992,16 @@ app.post('/getVehicleWithOptions', (req, res) => {
     .catch(err => res.json(err));
 });
 
+app.post("/createClampingFee", (req, res) => {
+    ClampingFeeModel.create(req.body)
+        .then(clampingFee => res.json(clampingFee))
+        .catch(err => res.json(err))
+    });
+app.get('/getClampingFees',(req,res)=>{
+    ClampingFeeModel.find({})
+    .then(clampingFees=> res.json(clampingFees))
+    .catch(err => res.json(err))
+    });
 
 // 3. Property Module
 app.post("/createProperty", (req, res) => {
