@@ -940,12 +940,39 @@ app.post('/getBusiness',(req,res)=>{
     .then(business=> res.json(business))
     .catch(err => res.json(err))
     });
+
 app.post('/BusinessInspection', async (req, res) => {
+    const { businessName } = req.body;
+    
+    if (!businessName) {
+        return res.status(400).json({ error: 'Business Name/Number is required!' });
+    }
+    
     try {
-        const response = await axios.post('https://197.248.169.230:450/api/Enforcement/BusinessInspection');
-        res.status(200).json(response.data);
-    } catch (err) {
-        res.status(500).json({ error: 'Error fetching parking units' });
+        const agent = new https.Agent({ rejectUnauthorized: false }); 
+    
+        const response = await axios.post(
+        'https://197.248.169.230:450/api/Enforcement/BusinessInspection',
+        {
+            headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            },
+            httpsAgent: agent, 
+        }
+        );
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error calling the external API:', error.message);
+        console.error('Full error details:', error);
+    
+        if (error.response) {
+        res.status(error.response.status).json({
+            error: error.response.data || 'Error from external API',
+        });
+        } else {
+        res.status(500).json({ error: 'Internal Server Error' });
+        }
     }
     });
 
