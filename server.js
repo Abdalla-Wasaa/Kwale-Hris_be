@@ -940,6 +940,14 @@ app.post('/getBusiness',(req,res)=>{
     .then(business=> res.json(business))
     .catch(err => res.json(err))
     });
+app.post('/BusinessInspection', async (req, res) => {
+    try {
+        const response = await axios.post('https://197.248.169.230:450/api/Enforcement/BusinessInspection');
+        res.status(200).json(response.data);
+    } catch (err) {
+        res.status(500).json({ error: 'Error fetching parking units' });
+    }
+    });
 
 app.post('/getBusinessWithOptions', (req, res) => {
     const businessName = req.body.businessName;
