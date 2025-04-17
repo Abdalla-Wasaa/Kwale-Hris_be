@@ -952,7 +952,7 @@ app.post('/BusinessInspection', async (req, res) => {
         const agent = new https.Agent({ rejectUnauthorized: false }); 
     
         const response = await axios.post(
-        'https://kwale.go.ke:450/api/Enforcement/BusinessInspection',
+        'https://197.248.169.230:450/api/Enforcement/BusinessInspection',
         {
             headers: {
             'Content-Type': 'application/json',
