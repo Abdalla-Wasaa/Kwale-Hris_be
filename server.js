@@ -941,48 +941,48 @@ app.post('/getBusiness',(req,res)=>{
     .catch(err => res.json(err))
     });
 
-    app.post('/BusinessInspection', async (req, res) => {
-        const { userId, businessName, businessNumber, subCountyId, wardId, zoneId } = req.body;
-      
-        // Basic validation
-        if (!businessName) {
-          return res.status(400).json({ error: 'Missing required fields:  businessName' });
-        }
-      
-        try {
-          const agent = new https.Agent({ rejectUnauthorized: false });
-      
-          const response = await axios.post(
-            'https://197.248.169.230:450/api/Enforcement/BusinessInspection',
-            {
-              userId,
-              businessName,
-              businessNumber,
-              subCountyId,
-              wardId,
-              zoneId,
+app.post('/BusinessInspection', async (req, res) => {
+    const { userId, businessName, businessNumber, subCountyId, wardId, zoneId } = req.body;
+    
+    // Basic validation
+    if (!businessName) {
+        return res.status(400).json({ error: 'Missing required fields:  businessName' });
+    }
+    
+    try {
+        const agent = new https.Agent({ rejectUnauthorized: false });
+    
+        const response = await axios.post(
+        'https://197.248.169.230:450/api/Enforcement/BusinessInspection',
+        {
+            userId,
+            businessName,
+            businessNumber,
+            subCountyId,
+            wardId,
+            zoneId,
+        },
+        {
+            headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
             },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-              },
-              httpsAgent: agent,
-            }
-          );
-      
-          res.status(response.status).json(response.data);
-        } catch (error) {
-          console.error('Error calling the external API:', error.message);
-          if (error.response) {
-            res.status(error.response.status).json({
-              error: error.response.data || 'Error from external API',
-            });
-          } else {
-            res.status(500).json({ error: 'Internal Server Error' });
-          }
+            httpsAgent: agent,
         }
-      });
+        );
+    
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error calling the external API:', error.message);
+        if (error.response) {
+        res.status(error.response.status).json({
+            error: error.response.data || 'Error from external API',
+        });
+        } else {
+        res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+    });
 
 app.post('/getBusinessWithOptions', (req, res) => {
     const businessName = req.body.businessName;
@@ -1018,6 +1018,45 @@ app.post('/getVehicle',(req,res)=>{
     vehicleModel.find({VehicleNumber:vehicleNumber})
     .then(vehicle=> res.json(vehicle))
     .catch(err => res.json(err))
+    });
+
+app.post('/VehicleInspection', async (req, res) => {
+    const { userId, vehicleNumber } = req.body;
+    
+    // Basic validation
+    if (!vehicleNumber) {
+        return res.status(400).json({ error: 'Missing required fields:  vehicleNumber' });
+    }
+    
+    try {
+        const agent = new https.Agent({ rejectUnauthorized: false });
+    
+        const response = await axios.post(
+        'https://197.248.169.230:450/api/Enforcement/NonPSVInspectionn',
+        {
+            userId,
+            vehicleNumber
+        },
+        {
+            headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            },
+            httpsAgent: agent,
+        }
+        );
+    
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error calling the external API:', error.message);
+        if (error.response) {
+        res.status(error.response.status).json({
+            error: error.response.data || 'Error from external API',
+        });
+        } else {
+        res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
     });
 
 app.post('/getVehicleWithOptions', (req, res) => {
