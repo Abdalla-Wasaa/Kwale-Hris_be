@@ -1302,7 +1302,7 @@ app.post('/getHouseAndStalls',(req,res)=>{
 
     //biling
     app.post('/Billing', async (req, res) => {
-        const { userId, phoneNumber, customerName, emailAddress, plateNumber, zoidNumberneId, entityTopay, amountTopay, feeId } = req.body;
+        const { userId, phoneNumber, customerName, emailAddress, plateNumber, idNumber, entityTopay, amountTopay, feeId } = req.body;
         
         // Basic validation
         if (!propertyNumber) {
@@ -1320,7 +1320,7 @@ app.post('/getHouseAndStalls',(req,res)=>{
                 customerName,
                 emailAddress,
                 plateNumber,
-                zoidNumberneId,
+                idNumber,
                 feeId,
                 amountTopay,
                 entityTopay
