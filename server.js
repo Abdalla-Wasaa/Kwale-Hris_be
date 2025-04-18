@@ -1305,8 +1305,8 @@ app.post('/getHouseAndStalls',(req,res)=>{
         const { userId, phoneNumber, customerName, emailAddress, plateNumber, idNumber, entityTopay, amountTopay, feeId } = req.body;
         
         // Basic validation
-        if (!propertyNumber) {
-            return res.status(400).json({ error: 'Missing required fields:  propertyNumber' });
+        if (!plateNumber) {
+            return res.status(400).json({ error: 'Missing required fields:  plateNumber' });
         }
         
         try {
