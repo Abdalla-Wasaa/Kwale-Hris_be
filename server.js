@@ -1115,6 +1115,45 @@ app.post('/getVehicleWithOptions', (req, res) => {
     .catch(err => res.json(err));
 });
 
+app.post('/MpesaCodeValidate', async (req, res) => {
+    const { userId, referenceNumber } = req.body;
+    
+    // Basic validation
+    if (!referenceNumber) {
+        return res.status(400).json({ error: 'Missing required fields:  referenceNumber' });
+    }
+    
+    try {
+        const agent = new https.Agent({ rejectUnauthorized: false });
+    
+        const response = await axios.post(
+        'https://197.248.169.230:450/api/Enforcement/MpesaCodeValidate',
+        {
+            userId,
+            referenceNumber
+        },
+        {
+            headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            },
+            httpsAgent: agent,
+        }
+        );
+    
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error calling the external API:', error.message);
+        if (error.response) {
+        res.status(error.response.status).json({
+            error: error.response.data || 'Error from external API',
+        });
+        } else {
+        res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+    });
+
 app.post("/createClampingFee", (req, res) => {
     ClampingFeeModel.create(req.body)
         .then(clampingFee => res.json(clampingFee))
