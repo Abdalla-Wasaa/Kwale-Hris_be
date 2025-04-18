@@ -1300,6 +1300,53 @@ app.post('/getHouseAndStalls',(req,res)=>{
     .catch(err => res.json(err))
     });
 
+    //biling
+    app.post('/Billing', async (req, res) => {
+        const { userId, phoneNumber, customerName, emailAddress, plateNumber, zoidNumberneId, entityTopay, amountTopay, feeId } = req.body;
+        
+        // Basic validation
+        if (!propertyNumber) {
+            return res.status(400).json({ error: 'Missing required fields:  propertyNumber' });
+        }
+        
+        try {
+            const agent = new https.Agent({ rejectUnauthorized: false });
+        
+            const response = await axios.post(
+            'https://197.248.169.230:450/api/Enforcement/Billing',
+            {
+                userId,
+                phoneNumber,
+                customerName,
+                emailAddress,
+                plateNumber,
+                zoidNumberneId,
+                feeId,
+                amountTopay,
+                entityTopay
+            },
+            {
+                headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                },
+                httpsAgent: agent,
+            }
+            );
+        
+            res.status(response.status).json(response.data);
+        } catch (error) {
+            console.error('Error calling the external API:', error.message);
+            if (error.response) {
+            res.status(error.response.status).json({
+                error: error.response.data || 'Error from external API',
+            });
+            } else {
+            res.status(500).json({ error: 'Internal Server Error' });
+            }
+        }
+        });
+
 
 // 6. Cess
 
