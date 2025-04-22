@@ -941,53 +941,57 @@ app.post('/getBusiness',(req,res)=>{
     .catch(err => res.json(err))
     });
 
-    app.post('/BusinessInspection', async (req, res) => {
-        const {
-          userId,
-          businessName,
-          businessNumber,
-          subCountyId,
-          wardId,
-          zoneId
-        } = req.body;
-      
-        // Optional: Decide which field to use (name or number)
-        const payload = {
-          userId,
-          businessName,
-          businessNumber,
-          subCountyId,
-          wardId,
-          zoneId
-        };
-      
-        try {
-          const agent = new https.Agent({ rejectUnauthorized: false });
-      
-          const response = await axios.post(
-            'https://197.248.169.230:450/api/Enforcement/BusinessInspection',
-            payload,
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-              },
-              httpsAgent: agent,
-            }
-          );
-      
-          res.status(response.status).json(response.data);
-        } catch (error) {
-          console.error('Error calling the external API:', error.message);
-          if (error.response) {
-            res.status(error.response.status).json({
-              error: error.response.data || 'Error from external API',
-            });
-          } else {
-            res.status(500).json({ error: 'Internal Server Error' });
-          }
-        }
-      });
+app.post('/BusinessInspection', async (req, res) => {
+const {
+    userId,
+    businessName,
+    businessNumber,
+    subCountyId,
+    telephoneNumber,
+    idNumber,
+    wardId,
+    zoneId
+} = req.body;
+
+// Optional: Decide which field to use (name or number)
+const payload = {
+    userId,
+    businessName,
+    businessNumber,
+    telephoneNumber,
+    idNumber,
+    subCountyId,
+    wardId,
+    zoneId
+};
+    
+try {
+    const agent = new https.Agent({ rejectUnauthorized: false });
+
+    const response = await axios.post(
+    'https://197.248.169.230:450/api/Enforcement/BusinessInspection',
+    payload,
+    {
+        headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        },
+        httpsAgent: agent,
+    }
+    );
+
+    res.status(response.status).json(response.data);
+} catch (error) {
+    console.error('Error calling the external API:', error.message);
+    if (error.response) {
+    res.status(error.response.status).json({
+        error: error.response.data || 'Error from external API',
+    });
+    } else {
+    res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+});
 
 app.post('/getBusinessWithOptions', (req, res) => {
     const businessName = req.body.businessName;
