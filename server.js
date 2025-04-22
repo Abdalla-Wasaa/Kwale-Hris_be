@@ -945,9 +945,9 @@ app.post('/BusinessInspection', async (req, res) => {
     const { userId, businessName, businessNumber, subCountyId, wardId, zoneId } = req.body;
     
     // Basic validation
-    if (!businessName) {
-        return res.status(400).json({ error: 'Missing required fields:  businessName' });
-    }
+    // if (!businessName) {
+    //     return res.status(400).json({ error: 'Missing required fields:  businessName' });
+    // }
     
     try {
         const agent = new https.Agent({ rejectUnauthorized: false });
