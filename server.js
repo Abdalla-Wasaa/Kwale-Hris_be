@@ -44,7 +44,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
 // origin: ["https://kwale-hris-app.onrender.com", "http://localhost:4000"],
-origin: ["https://kwale-hris-app.onrender.com","http://localhost:3000","http://172.20.10.7:3000"],
+origin: ["https://kwale-hris-app.onrender.com","http://localhost:3000","http://172.20.10.7:3000","http://192.168.1.108:3003"],
 methods: ["GET", "POST", "PUT"],
 credentials: true
 }))
@@ -1286,6 +1286,49 @@ app.post('/getPlotByLR',(req,res)=>{
     plotModel.find({LrNumber:lr})
     .then(plot=> res.json(plot))
     .catch(err => res.json(err))
+    });
+
+app.post('/PlotRentInspection', async (req, res) => {
+    const { userId, propertyNumber, upnNumber, subCountyId, wardId, zoneId } = req.body;
+    
+    // Basic validation
+    if (!propertyNumber) {
+        return res.status(400).json({ error: 'Missing required fields:  propertyNumber' });
+    }
+    
+    try {
+        const agent = new https.Agent({ rejectUnauthorized: false });
+    
+        const response = await axios.post(
+        'https://197.248.169.230:450/api/Enforcement/PlotRentInspection',
+        {
+            userId,
+            propertyNumber,
+            upnNumber,
+            subCountyId,
+            wardId,
+            zoneId,
+        },
+        {
+            headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            },
+            httpsAgent: agent,
+        }
+        );
+    
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error calling the external API:', error.message);
+        if (error.response) {
+        res.status(error.response.status).json({
+            error: error.response.data || 'Error from external API',
+        });
+        } else {
+        res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
     });
 
 app.post("/createReceipt", (req, res) => {
