@@ -1352,6 +1352,46 @@ app.post('/getHouseAndStalls',(req,res)=>{
     .catch(err => res.json(err))
     });
 
+
+app.post('/StallInspection', async (req, res) => {
+    const { userId, stallNumber } = req.body;
+    
+    // Basic validation
+    if (!stallNumber) {
+        return res.status(400).json({ error: 'Missing required fields:  stallNumber' });
+    }
+    
+    try {
+        const agent = new https.Agent({ rejectUnauthorized: false });
+    
+        const response = await axios.post(
+        'https://197.248.169.230:450/api/Enforcement/StallInspection',
+        {
+            userId,
+            stallNumber
+        },
+        {
+            headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            },
+            httpsAgent: agent,
+        }
+        );
+    
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error calling the external API:', error.message);
+        if (error.response) {
+        res.status(error.response.status).json({
+            error: error.response.data || 'Error from external API',
+        });
+        } else {
+        res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+    });
+
     //biling
     app.post('/Billing', async (req, res) => {
         const { userId, phoneNumber, customerName, emailAddress, plateNumber, idNumber, entityTopay, amountTopay, feeId } = req.body;
