@@ -1068,46 +1068,46 @@ app.post('/VehicleInspection', async (req, res) => {
     }
     });
 
-    app.post('/VehicleClamping', async (req, res) => {
-                const { userId, vehicleNumber, clampingCharge,vehicleType } = req.body;
-        
-        // Basic validation
-        if (!vehicleNumber || !clampingCharge || !vehicleType) {
-            return res.status(400).json({ error: 'All fields are required!' });
-        }
-        
-        try {
-            const agent = new https.Agent({ rejectUnauthorized: false });
-        
-            const response = await axios.post(
-            'https://197.248.169.230:450/api/Enforcement/VehicleClamping',
-            {
-                userId,
-                vehicleNumber,
-                clampingCharge,
-                vehicleType
+app.post('/VehicleClamping', async (req, res) => {
+            const { userId, vehicleNumber, clampingCharge,vehicleType } = req.body;
+    
+    // Basic validation
+    if (!vehicleNumber || !clampingCharge || !vehicleType) {
+        return res.status(400).json({ error: 'All fields are required!' });
+    }
+    
+    try {
+        const agent = new https.Agent({ rejectUnauthorized: false });
+    
+        const response = await axios.post(
+        'https://197.248.169.230:450/api/Enforcement/VehicleClamping',
+        {
+            userId,
+            vehicleNumber,
+            clampingCharge,
+            vehicleType
+        },
+        {
+            headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
             },
-            {
-                headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                },
-                httpsAgent: agent,
-            }
-            );
-        
-            res.status(response.status).json(response.data);
-        } catch (error) {
-            console.error('Error calling the external API:', error.message);
-            if (error.response) {
-            res.status(error.response.status).json({
-                error: error.response.data || 'Error from external API',
-            });
-            } else {
-            res.status(500).json({ error: 'Internal Server Error' });
-            }
+            httpsAgent: agent,
         }
+        );
+    
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error calling the external API:', error.message);
+        if (error.response) {
+        res.status(error.response.status).json({
+            error: error.response.data || 'Error from external API',
         });
+        } else {
+        res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+    });
 
 app.post('/getVehicleWithOptions', (req, res) => {
     const vehicleNumber = req.body.vehicleNumber;
@@ -1176,11 +1176,13 @@ app.get('/getClampingFees',(req,res)=>{
 
 app.post('/GetVehicleTypePerParkingUnit', async (req, res) => {
     
+
     try {
         const agent = new https.Agent({ rejectUnauthorized: false });
-    
+
         const response = await axios.post(
         'https://197.248.169.230:450/api/Enforcement/GetVehicleTypePerParkingUnit/5',
+    
         {
             headers: {
             'Content-Type': 'application/json',
@@ -1189,7 +1191,7 @@ app.post('/GetVehicleTypePerParkingUnit', async (req, res) => {
             httpsAgent: agent,
         }
         );
-    
+
         res.status(response.status).json(response.data);
     } catch (error) {
         console.error('Error calling the external API:', error.message);
