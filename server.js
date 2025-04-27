@@ -1174,6 +1174,35 @@ app.get('/getClampingFees',(req,res)=>{
     .catch(err => res.json(err))
     });
 
+app.post('/GetVehicleTypePerParkingUnit', async (req, res) => {
+    
+    try {
+        const agent = new https.Agent({ rejectUnauthorized: false });
+    
+        const response = await axios.post(
+        'https://197.248.169.230:450/api/Enforcement/GetVehicleTypePerParkingUnit/5',
+        {
+            headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            },
+            httpsAgent: agent,
+        }
+        );
+    
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error calling the external API:', error.message);
+        if (error.response) {
+        res.status(error.response.status).json({
+            error: error.response.data || 'Error from external API',
+        });
+        } else {
+        res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+    });
+
 // 3. Property Module
 app.post("/createProperty", (req, res) => {
     propertyModel.create(req.body)
