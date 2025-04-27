@@ -1174,7 +1174,7 @@ app.get('/getClampingFees',(req,res)=>{
     .catch(err => res.json(err))
     });
 
-app.post('/GetVehicleTypePerParkingUnit', async (req, res) => {
+app.get('/GetVehicleTypePerParkingUnit', async (req, res) => {
     
     try {
         const agent = new https.Agent({ rejectUnauthorized: false });
