@@ -1875,7 +1875,7 @@ async function sendTemplateMessage(){
         url: "https://graph.facebook.com/v22.0/683430791513718/messages",
         method: 'post',
         headers:{
-            'Authorization':`Bearer ${process.env.WHATSAPP_TOKEN}`,
+            // 'Authorization':`Bearer ${process.env.WHATSAPP_TOKEN}`,
             'Content-Type':'application/json'
         },
         data:JSON.stringify({
@@ -1893,6 +1893,100 @@ async function sendTemplateMessage(){
     console.log(response)
 }
 sendTemplateMessage();
+
+async function sendTextMessage(){
+    const response = await axios ({
+        url: "https://graph.facebook.com/v22.0/683430791513718/messages",
+        method: 'post',
+        headers:{
+            // 'Authorization':`Bearer ${process.env.WHATSAPP_TOKEN}`,
+            'Content-Type':'application/json'
+        },
+        data:JSON.stringify({
+            messaging_product:'whatsapp',
+            to:'254724221766',
+            type:'text',
+            text:{
+             body: 'Welcome to chatbot world!'
+            }
+        })
+    })
+    console.log(response)
+}
+
+sendTextMessage();
+
+const sessions = {}; // In-memory session store
+
+app.post('/whatsapp', async (req, res) => {
+  const from = req.body.From;
+  const msg = req.body.Body.trim().toLowerCase();
+  let reply = '';
+
+  if (!sessions[from]) {
+    sessions[from] = { stage: 'menu' };
+  }
+
+  const session = sessions[from];
+
+  switch (session.stage) {
+    case 'menu':
+      reply = 'Welcome! Please select a product:\n';
+      products.forEach(p => {
+        reply += `${p.id}. ${p.name} - KES ${p.price}\n`;
+      });
+      session.stage = 'awaiting_product';
+      break;
+
+    case 'awaiting_product':
+      const selected = products.find(p => p.id == msg);
+      if (selected) {
+        session.product = selected;
+        session.stage = 'awaiting_quantity';
+        reply = `You selected *${selected.name}*. Enter quantity:`;
+      } else {
+        reply = "Invalid product ID. Please try again.";
+      }
+      break;
+
+    case 'awaiting_quantity':
+      const quantity = parseInt(msg);
+      if (!isNaN(quantity) && quantity > 0) {
+        session.quantity = quantity;
+        session.stage = 'awaiting_phone';
+        reply = `Total amount is KES ${session.product.price * quantity}.\nPlease enter your M-Pesa phone number (e.g. 2547XXXXXXXX):`;
+      } else {
+        reply = "Please enter a valid quantity.";
+      }
+      break;
+
+    case 'awaiting_phone':
+      const phone = msg;
+      const total = session.product.price * session.quantity;
+
+      try {
+        await stkPush(phone, total);
+        reply = `STK Push sent for KES ${total} to ${phone}. Complete the payment. Thank you!`;
+      } catch (e) {
+        console.error(e.response?.data || e.message);
+        reply = "Failed to send STK push. Try again later.";
+      }
+
+      delete sessions[from]; // Clear session after order
+      break;
+
+    default:
+      reply = "Session error. Please type anything to restart.";
+      delete sessions[from];
+  }
+
+  res.set('Content-Type', 'text/xml');
+  res.send(`
+    <Response>
+      <Message>${reply}</Message>
+    </Response>
+  `);
+});
 
 app.listen(4000,()=>{
 console.log("Server listening on port 4000")
