@@ -1756,60 +1756,56 @@ app.post('/uploadBusinessPermitData', upload.single('file'), async (req, res) =>
 //ROBERT STK
    /*Daraja Api */
 
-app.post("/RobertSTKPush", async (req, res) => {
-try {
-const stkToken = await createToken();
-
-const secret = "Rh9pySrCnhXZOsVdfwnecVpG0GYHpbjQGigcrUH4haiH5d5saHhkQRuZc41l1lGM";
-const consumer = "AXnhnb9qQ2IXaFb3FzATGWK45LoVWa4nvxNbocDqCXz17368";
-const auth = Buffer.from(`${consumer}:${secret}`).toString("base64");
-const shortcode = 174379;
-const phoneNumber = req.body.phoneNumber.substring(1);
-const amount = req.body.amount;
-const passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
-const url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
-
-const date = new Date();
-const timestamp = date.getFullYear() +
-    ("0" + (date.getMonth() + 1)).slice(-2) +
-    ("0" + date.getDate()).slice(-2) +
-    ("0" + date.getHours()).slice(-2) +
-    ("0" + date.getMinutes()).slice(-2) +
-    ("0" + date.getSeconds()).slice(-2);
-
-const password = Buffer.from(shortcode + passkey + timestamp).toString("base64");
-const data = {                                            
-                    "BusinessShortCode": shortcode,    
-                    "Password": password,    
-                    "Timestamp":timestamp,    
-                    "TransactionType": "CustomerPayBillOnline",    
-                    "Amount": amount,    
-                    "PartyA":"254716483231",    
-                    "PartyB":shortcode,    
-                    "PhoneNumber":`254${phoneNumber}`,    
-                    "CallBackURL": "https://mydomain.com/pat",   
-                    "AccountReference":"KWALE COUNTY GOVERNMENT",    
-                    "TransactionDesc":"Testing Stk Push"
-                };
-            
-        
-
-await axios.post(url, data, {
-    headers: {
-        Authorization: `Bearer ${stkToken}`,
+   app.post("/BotSTKPush", async (req, res) => {
+    try {
+      const { phoneNumber, amount } = req.body;
+  
+      if (!/^07\d{8}$/.test(phoneNumber)) {
+        return res.status(400).json({ error: "Invalid phone number format" });
+      }
+  
+      const consumer = "AXnhnb9qQ2IXaFb3FzATGWK45LoVWa4nvxNbocDqCXz17368";
+      const secret = "Rh9pySrCnhXZOsVdfwnecVpG0GYHpbjQGigcrUH4haiH5d5saHhkQRuZc41l1lGM";
+      const shortcode = 4182121;
+      const passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
+      const timestamp = new Date().toISOString().replace(/[-T:.Z]/g, '').slice(0, 14);
+      const password = Buffer.from(shortcode + passkey + timestamp).toString("base64");
+  
+      const auth = Buffer.from(`${consumer}:${secret}`).toString("base64");
+      const tokenRes = await axios.get("https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials", {
+        headers: { Authorization: `Basic ${auth}` },
+      });
+  
+      const stkToken = tokenRes.data.access_token;
+  
+      const data = {
+        BusinessShortCode: shortcode,
+        Password: password,
+        Timestamp: timestamp,
+        TransactionType: "CustomerPayBillOnline",
+        Amount: amount,
+        PartyA: `254${phoneNumber.substring(1)}`,
+        PartyB: shortcode,
+        PhoneNumber: `254${phoneNumber.substring(1)}`,
+        CallBackURL: "http://41.72.195.2:8081/api/C2B/lnmo",
+        AccountReference: "AccountReference",
+        TransactionDesc: "Udhhya Eslip",
+      };
+  
+      const response = await axios.post("https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest", data, {
+        headers: {
+          Authorization: `Bearer ${stkToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+  
+      res.status(200).json(response.data);
+    } catch (error) {
+      console.error("STK Push Error:", error.response?.data || error.message);
+      res.status(500).json({ error: error.response?.data || error.message });
     }
-}).then((response) => {
-    console.log(response.data);
-    res.status(200).json(response.data);
-}).catch((err) => {
-    console.error("stkPush error:", err);
-    res.status(400).json(err.message);
-});
-} catch (error) {
-console.error("Token retrieval error:", error);
-res.status(400).json(error.message);
-}
-});
+  });
+  
 
 app.post('/proxy/stkPush', async (req, res) => {
     const { Phone, Amount, AccountReference } = req.body;
@@ -1847,6 +1843,7 @@ app.post('/proxy/stkPush', async (req, res) => {
         }
     }
 });
+  
 
 
 app.listen(4000,()=>{
