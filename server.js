@@ -1864,7 +1864,7 @@ app.post("/createOrder", (req, res) => {
         .then(order => res.json(order))
         .catch(err => res.json(err))
     });
-app.get('/getProducts',(req,res)=>{
+app.get('/getOrders',(req,res)=>{
     orderModel.find({})
     .then(orders=> res.json(orders))
     .catch(err => res.json(err))
