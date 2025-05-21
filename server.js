@@ -1766,7 +1766,7 @@ app.post('/uploadBusinessPermitData', upload.single('file'), async (req, res) =>
   
       const consumer = "AXnhnb9qQ2IXaFb3FzATGWK45LoVWa4nvxNbocDqCXz17368";
       const secret = "Rh9pySrCnhXZOsVdfwnecVpG0GYHpbjQGigcrUH4haiH5d5saHhkQRuZc41l1lGM";
-      const shortcode = 4182121;
+      const shortcode = 174379;
       const passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
       const timestamp = new Date().toISOString().replace(/[-T:.Z]/g, '').slice(0, 14);
       const password = Buffer.from(shortcode + passkey + timestamp).toString("base64");
