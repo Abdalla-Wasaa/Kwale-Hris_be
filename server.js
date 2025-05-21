@@ -1870,51 +1870,51 @@ app.get('/getOrders',(req,res)=>{
     .catch(err => res.json(err))
     });
 
-async function sendTemplateMessage(){
-    const response = await axios ({
-        url: "https://graph.facebook.com/v22.0/683430791513718/messages",
-        method: 'post',
-        headers:{
-            // 'Authorization':`Bearer ${process.env.WHATSAPP_TOKEN}`,
-            'Content-Type':'application/json'
-        },
-        data:JSON.stringify({
-            messaging_product:'whatsapp',
-            to:'254724221766',
-            type:'template',
-            template:{
-                name:'hello_world',
-                language:{
-                    code:'en_US'
-                }
-            }
-        })
-    })
-    console.log(response)
-}
-sendTemplateMessage();
+// async function sendTemplateMessage(){
+//     const response = await axios ({
+//         url: "https://graph.facebook.com/v22.0/683430791513718/messages",
+//         method: 'post',
+//         headers:{
+//             // 'Authorization':`Bearer ${process.env.WHATSAPP_TOKEN}`,
+//             'Content-Type':'application/json'
+//         },
+//         data:JSON.stringify({
+//             messaging_product:'whatsapp',
+//             to:'254724221766',
+//             type:'template',
+//             template:{
+//                 name:'hello_world',
+//                 language:{
+//                     code:'en_US'
+//                 }
+//             }
+//         })
+//     })
+//     console.log(response)
+// }
+// sendTemplateMessage();
 
-async function sendTextMessage(){
-    const response = await axios ({
-        url: "https://graph.facebook.com/v22.0/683430791513718/messages",
-        method: 'post',
-        headers:{
-            // 'Authorization':`Bearer ${process.env.WHATSAPP_TOKEN}`,
-            'Content-Type':'application/json'
-        },
-        data:JSON.stringify({
-            messaging_product:'whatsapp',
-            to:'254724221766',
-            type:'text',
-            text:{
-             body: 'Welcome to chatbot world!'
-            }
-        })
-    })
-    console.log(response)
-}
+// async function sendTextMessage(){
+//     const response = await axios ({
+//         url: "https://graph.facebook.com/v22.0/683430791513718/messages",
+//         method: 'post',
+//         headers:{
+//             // 'Authorization':`Bearer ${process.env.WHATSAPP_TOKEN}`,
+//             'Content-Type':'application/json'
+//         },
+//         data:JSON.stringify({
+//             messaging_product:'whatsapp',
+//             to:'254724221766',
+//             type:'text',
+//             text:{
+//              body: 'Welcome to chatbot world!'
+//             }
+//         })
+//     })
+//     console.log(response)
+// }
 
-sendTextMessage();
+// sendTextMessage();
 
 const sessions = {}; // In-memory session store
 
