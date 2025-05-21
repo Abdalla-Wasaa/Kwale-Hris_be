@@ -1870,6 +1870,30 @@ app.get('/getOrders',(req,res)=>{
     .catch(err => res.json(err))
     });
 
+async function sendTemplateMessage(){
+    const response = await axios ({
+        url: "https://graph.facebook.com/v22.0/683430791513718/messages",
+        method: 'post',
+        headers:{
+            'Authorization':`Bearer ${process.env.WHATSAPP_TOKEN}`,
+            'Content-Type':'application/json'
+        },
+        data:JSON.stringify({
+            messaging_product:'whatsapp',
+            to:'254724221766',
+            type:'template',
+            template:{
+                name:'hello_world',
+                language:{
+                    code:'en_US'
+                }
+            }
+        })
+    })
+    console.log(response)
+}
+sendTemplateMessage();
+
 app.listen(4000,()=>{
 console.log("Server listening on port 4000")
 })
