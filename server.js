@@ -37,6 +37,8 @@ const activityCodeModel = require("./models/activityCodes");
 const subcountyModel = require("./models/subcounty");
 const wardModel = require("./models/ward");
 const ClampingFeeModel = require("./models/clampingFee");
+const productModel = require("./models/product");
+const orderModel = require("./models/order");
 connectDB();
 
 const app = express();
@@ -1844,7 +1846,29 @@ app.post('/proxy/stkPush', async (req, res) => {
     }
 });
   
+//WhatsappBot
 
+app.post("/createProduct", (req, res) => {
+    productModel.create(req.body)
+        .then(product => res.json(product))
+        .catch(err => res.json(err))
+    });
+app.get('/getProducts',(req,res)=>{
+    productModel.find({})
+    .then(products=> res.json(products))
+    .catch(err => res.json(err))
+    });
+
+app.post("/createOrder", (req, res) => {
+    orderModel.create(req.body)
+        .then(order => res.json(order))
+        .catch(err => res.json(err))
+    });
+app.get('/getProducts',(req,res)=>{
+    orderModel.find({})
+    .then(orders=> res.json(orders))
+    .catch(err => res.json(err))
+    });
 
 app.listen(4000,()=>{
 console.log("Server listening on port 4000")
