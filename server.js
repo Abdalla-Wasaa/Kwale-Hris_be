@@ -1770,51 +1770,44 @@ app.post('/uploadPOSfeeCharges', upload.single('file'), async (req, res) => {
         return res.status(400).json({ error: 'No file uploaded' });
     }
 
+    console.log("Received file:", req.file); // Log the received file
+
     try {
-        // Read the Excel file
         const filePath = req.file.path;
         const workbook = XLSX.readFile(filePath);
-        const sheetName = workbook.SheetNames[0]; // Assumes data is in the first sheet
+        const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const data = XLSX.utils.sheet_to_json(worksheet);
-        
-        console.log('Parsed data:', data); // Log to inspect data
+        console.log('Parsed data:', data);  // Log the parsed data
 
         if (!data.length) {
             return res.status(400).json({ error: 'No valid data found in the file' });
         }
 
-        // Loop through each posFeeCharge record in the data
         for (const posFeeCharge of data) {
             const { FeeId } = posFeeCharge;
-
-            // Validate that FeeId is provided
             if (!FeeId) {
                 console.warn('Missing FeeId for one of the records');
-                continue; // Skip this iteration if FeeId is missing
+                continue;
             }
 
-            // Check if the record already exists in the database
             const existingPOSFeeCharge = await POSFeeChargeModel.findOne({ FeeId });
-
             if (existingPOSFeeCharge) {
-                // If the record exists, update it
                 await POSFeeChargeModel.updateOne({ FeeId }, { $set: posFeeCharge });
                 console.log(`Updated FeeId: ${FeeId}`);
             } else {
-                // If the record does not exist, create a new one
                 await POSFeeChargeModel.create(posFeeCharge);
                 console.log(`Inserted new record: ${FeeId}`);
             }
         }
 
-        // Send response
         res.status(200).json({ message: 'Data successfully uploaded!' });
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: 'Failed to upload data' });
     }
 });
+
 
 
    /*Daraja Api */
