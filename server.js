@@ -1776,17 +1776,26 @@ app.post('/uploadPOSfeeCharges', upload.single('file'), async (req, res) => {
 
         // Loop through each posFeeCharge record in the data
         for (const posFeeCharge of data) {
-            // Check if the employee already exists in the database
-            const existingPOSFeeCharge = await POSFeeChargeModel.findOne({ FeeId: FeeId });
+            // Ensure FeeId is available and properly extracted
+            const { FeeId } = posFeeCharge;
+
+            // Check if the FeeId exists before proceeding
+            if (!FeeId) {
+                console.warn('Missing FeeId for one of the records');
+                continue; // Skip this iteration if FeeId is missing
+            }
+
+            // Check if the record already exists in the database
+            const existingPOSFeeCharge = await POSFeeChargeModel.findOne({ FeeId });
 
             if (existingPOSFeeCharge) {
-                // If the employee exists, update the record
+                // If the record exists, update it
                 await POSFeeChargeModel.updateOne(
-                    { FeeId: FeeId },
+                    { FeeId },
                     { $set: posFeeCharge }
                 );
             } else {
-                // If the employee does not exist, create a new record
+                // If the record does not exist, create a new one
                 await POSFeeChargeModel.create(posFeeCharge);
             }
         }
@@ -1798,6 +1807,7 @@ app.post('/uploadPOSfeeCharges', upload.single('file'), async (req, res) => {
         res.status(500).json({ error: 'Failed to upload data' });
     }
 });
+
    /*Daraja Api */
 
    app.post("/BotSTKPush", async (req, res) => {
