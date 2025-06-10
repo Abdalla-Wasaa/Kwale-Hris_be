@@ -39,6 +39,7 @@ const wardModel = require("./models/ward");
 const ClampingFeeModel = require("./models/clampingFee");
 const productModel = require("./models/product");
 const orderModel = require("./models/order");
+const POSFeeChargeModel = require("./models/posFeeCharge");
 connectDB();
 
 const app = express();
@@ -1756,6 +1757,47 @@ app.post('/uploadBusinessPermitData', upload.single('file'), async (req, res) =>
 
 
 //ROBERT STK
+
+app.post('/addPOSfeeCharges',(req,res)=>{
+POSFeeChargeModel.create(req.body)
+.then(posFeeCharges => res.json(posFeeCharges))
+.catch(err => res.json(err))
+    
+});
+
+app.post('/uploadPOSfeeCharges', upload.single('file'), async (req, res) => {
+    try {
+        // Read the Excel file
+        const filePath = req.file.path;
+        const workbook = XLSX.readFile(filePath);
+        const sheetName = workbook.SheetNames[0]; // Assumes data is in the first sheet
+        const worksheet = workbook.Sheets[sheetName];
+        const data = XLSX.utils.sheet_to_json(worksheet);
+
+        // Loop through each posFeeCharge record in the data
+        for (const posFeeCharge of data) {
+            // Check if the employee already exists in the database
+            const existingPOSFeeCharge = await POSFeeChargeModel.findOne({ FeeId: FeeId });
+
+            if (existingPOSFeeCharge) {
+                // If the employee exists, update the record
+                await POSFeeChargeModel.updateOne(
+                    { FeeId: FeeId },
+                    { $set: posFeeCharge }
+                );
+            } else {
+                // If the employee does not exist, create a new record
+                await POSFeeChargeModel.create(posFeeCharge);
+            }
+        }
+
+        // Send response
+        res.status(200).json({ message: 'Data successfully uploaded!' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to upload data' });
+    }
+});
    /*Daraja Api */
 
    app.post("/BotSTKPush", async (req, res) => {
