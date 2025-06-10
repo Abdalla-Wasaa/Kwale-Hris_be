@@ -1766,6 +1766,10 @@ POSFeeChargeModel.create(req.body)
 });
 
 app.post('/uploadPOSfeeCharges', upload.single('file'), async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+    }
+
     try {
         // Read the Excel file
         const filePath = req.file.path;
@@ -1773,13 +1777,18 @@ app.post('/uploadPOSfeeCharges', upload.single('file'), async (req, res) => {
         const sheetName = workbook.SheetNames[0]; // Assumes data is in the first sheet
         const worksheet = workbook.Sheets[sheetName];
         const data = XLSX.utils.sheet_to_json(worksheet);
+        
+        console.log('Parsed data:', data); // Log to inspect data
+
+        if (!data.length) {
+            return res.status(400).json({ error: 'No valid data found in the file' });
+        }
 
         // Loop through each posFeeCharge record in the data
         for (const posFeeCharge of data) {
-            // Ensure FeeId is available and properly extracted
             const { FeeId } = posFeeCharge;
 
-            // Check if the FeeId exists before proceeding
+            // Validate that FeeId is provided
             if (!FeeId) {
                 console.warn('Missing FeeId for one of the records');
                 continue; // Skip this iteration if FeeId is missing
@@ -1790,23 +1799,23 @@ app.post('/uploadPOSfeeCharges', upload.single('file'), async (req, res) => {
 
             if (existingPOSFeeCharge) {
                 // If the record exists, update it
-                await POSFeeChargeModel.updateOne(
-                    { FeeId },
-                    { $set: posFeeCharge }
-                );
+                await POSFeeChargeModel.updateOne({ FeeId }, { $set: posFeeCharge });
+                console.log(`Updated FeeId: ${FeeId}`);
             } else {
                 // If the record does not exist, create a new one
                 await POSFeeChargeModel.create(posFeeCharge);
+                console.log(`Inserted new record: ${FeeId}`);
             }
         }
 
         // Send response
         res.status(200).json({ message: 'Data successfully uploaded!' });
     } catch (err) {
-        console.error(err);
+        console.error('Error:', err);
         res.status(500).json({ error: 'Failed to upload data' });
     }
 });
+
 
    /*Daraja Api */
 
