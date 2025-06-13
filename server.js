@@ -1765,6 +1765,12 @@ POSFeeChargeModel.create(req.body)
     
 });
 
+app.get('/getPOSfeeCharges',(req,res)=>{
+    POSFeeChargeModel.find({})
+    .then(posFeeCharges=> res.json(posFeeCharges))
+    .catch(err => res.json(err))
+    });
+
 app.post('/uploadPOSfeeCharges', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
