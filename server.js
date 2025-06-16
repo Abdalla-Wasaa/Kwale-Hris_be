@@ -47,7 +47,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
 // origin: ["https://kwale-hris-app.onrender.com", "http://localhost:4000"],
-origin: ["https://kwale-hris-app.onrender.com","http://localhost:3000","http://172.20.10.7:3000","http://192.168.1.108:3003","https://epay1-rho.vercel.app","https://epay-mobile-app.vercel.app/"],
+origin: ["https://kwale-hris-app.onrender.com","http://localhost:3000","http://172.20.10.7:3000","http://192.168.1.108:3003","https://epay1-rho.vercel.app","https://epay-mobile-app.vercel.app"],
 methods: ["GET", "POST", "PUT"],
 credentials: true
 }))
