@@ -1427,7 +1427,7 @@ app.post('/StallInspection', async (req, res) => {
 
     //biling
     app.post('/Billing', async (req, res) => {
-        const { userId, phoneNumber, customerName, emailAddress, plateNumber, idNumber, entityTopay, amountTopay, feeId } = req.body;
+        const { userId, phoneNumber, customerName, emailAddress, plateNumber, idNumber,quantity,entityId, entityTopay, amountTopay, feeId } = req.body;
         
         // Basic validation
         if (!plateNumber) {
@@ -1446,7 +1446,9 @@ app.post('/StallInspection', async (req, res) => {
                 emailAddress,
                 plateNumber,
                 idNumber,
+                quantity,
                 feeId,
+                entityId,
                 amountTopay,
                 entityTopay
             },
